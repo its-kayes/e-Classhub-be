@@ -86,6 +86,7 @@ app.use(globalErrorHandler);
 // 404 handler
 app.all('*', (req: Request, res: Response) => {
   return throwResponse(
+    req,
     res,
     null,
     httpStatus.NOT_FOUND,

@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Response } from 'express';
+import { Request, Response } from 'express';
 
 export const throwResponse = async (
+  req: Request,
   res: Response,
   data: any,
   statusCode: number,
