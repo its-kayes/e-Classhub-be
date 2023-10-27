@@ -27,6 +27,8 @@ const UserSignIn = async (data: IUser) => {
       httpStatus.NOT_ACCEPTABLE,
     );
 
+  // TODO: Send Email Verification Link
+
   return save;
 };
 
