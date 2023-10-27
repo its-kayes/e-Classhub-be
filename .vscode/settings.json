@@ -1,0 +1,23 @@
+{
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true,
+    "source.fixAll.tslint": true,
+    "source.organizeImports": true
+  },
+  "cSpell.words": [
+    "Ayat",
+    "Ayats",
+    "classhub",
+    "Hizb",
+    "maxlength",
+    "Musaf",
+    "Newlanguage",
+    "Proggamoy",
+    "Qari",
+    "Ruku",
+    "Sajdah",
+    "tafsir",
+    "কোরআন",
+    "প্রজ্ঞাময়"
+  ]
+}
