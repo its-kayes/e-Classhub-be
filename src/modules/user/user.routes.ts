@@ -3,6 +3,8 @@ import { UserController } from './user.controller';
 
 const router: Router = Router();
 
-router.get('/find-one', UserController.FindUser);
+router.get('/find-one', UserController.FindUser); // Find One User
+
+router.post('/sign-in', UserController.UserSignIn); // Sign In User
 
 export { router as UserRoutes };

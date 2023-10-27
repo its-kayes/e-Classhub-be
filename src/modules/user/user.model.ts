@@ -1,5 +1,4 @@
 import { Schema, model } from 'mongoose';
-import { number } from 'zod';
 import { IUser, UserModel } from './user.interface';
 
 const userSchema = new Schema<IUser>(
@@ -13,8 +12,8 @@ const userSchema = new Schema<IUser>(
     email: {
       type: String,
       required: [true, 'Please provide your email'],
-      unique: true,
       lowercase: true,
+      unique: true,
       validate: {
         validator: function (v: string) {
           return /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/.test(v);
@@ -63,7 +62,7 @@ const userSchema = new Schema<IUser>(
       type: String,
     },
     postalCode: {
-      type: number,
+      type: Number,
     },
     title: {
       type: String,
