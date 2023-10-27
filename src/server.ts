@@ -1,9 +1,9 @@
-import { Server } from "http";
-import mongoose, { ConnectOptions } from "mongoose";
-import app from "./app";
-import { MONGO_URI, PORT } from "./config/siteEnv";
+import { Server } from 'http';
+import mongoose, { ConnectOptions } from 'mongoose';
+import app from './app';
+import { MONGO_URI, PORT } from './config/siteEnv';
 
-process.on("uncaughtException", (error) => {
+process.on('uncaughtException', error => {
   console.log(error);
   process.exit(1);
 });
@@ -18,20 +18,20 @@ async function main() {
         {
           useNewUrlParser: true,
           useUnifiedTopology: true,
-        } as ConnectOptions
+        } as ConnectOptions,
       )
       .then(() => {
-        console.log("DB Connected!");
+        console.log('DB Connected!');
         app.listen(PORT, () => console.log(`Server Ok ? ${PORT}`));
       })
-      .catch((error) => {
+      .catch(error => {
         console.log(error);
       });
   } catch (error) {
-    console.log("Failed to connect database", error);
+    console.log('Failed to connect database', error);
   }
 
-  process.on("unhandledRejection", (error) => {
+  process.on('unhandledRejection', error => {
     if (server) {
       server.close(() => {
         console.log(error);

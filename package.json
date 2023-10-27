@@ -15,7 +15,12 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc"
   },
-  "keywords": ["e-classhub", "classroom", "google-classroom", "google-meet"],
+  "keywords": [
+    "e-classhub",
+    "classroom",
+    "google-classroom",
+    "google-meet"
+  ],
   "author": "kayes",
   "license": "ISC",
   "lint-staged": {
