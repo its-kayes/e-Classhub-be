@@ -24,12 +24,12 @@ const FindUser: RequestHandler = catchAsync(async (req, res) => {
 });
 
 // Save User
-const UserSignIn: RequestHandler = catchAsync(async (req, res) => {
+const UserSignUp: RequestHandler = catchAsync(async (req, res) => {
   const { name, email, password, type, gender } = req.body as IUser;
 
   isRequestOk([name, email, password, type, gender]);
 
-  const result = await UserService.UserSignIn({
+  const result = await UserService.UserSignUp({
     name,
     email,
     gender,
@@ -54,7 +54,32 @@ const UserSignIn: RequestHandler = catchAsync(async (req, res) => {
   );
 });
 
+// Sign In User
+const UserSignIn: RequestHandler = catchAsync(async (req, res) => {
+  const { email, password } = req.body as IUser;
+
+  isRequestOk([email, password]);
+
+  const result = await UserService.UserSignIn({ email, password });
+
+  if (!result)
+    throw new AppError(
+      'Something went wrong',
+      httpStatus.INTERNAL_SERVER_ERROR,
+    );
+
+  return throwResponse(
+    req,
+    res,
+    result,
+    httpStatus.OK,
+    'Sign in Successful',
+    true,
+  );
+});
+
 export const UserController = {
   FindUser,
+  UserSignUp,
   UserSignIn,
 };

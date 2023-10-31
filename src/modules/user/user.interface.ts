@@ -26,3 +26,8 @@ export type IUser = {
 };
 
 export type UserModel = Model<IUser, Record<string, unknown>>;
+
+export type IUserSignIn = {
+  email: string;
+  password: string;
+};

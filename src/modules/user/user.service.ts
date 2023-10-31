@@ -1,11 +1,12 @@
+import bcrypt from 'bcryptjs';
 import httpStatus from 'http-status';
 import AppError from '../../errors/AppError';
 import { hashText } from '../../util/hashText';
-import { IUser } from './user.interface';
+import { IUser, IUserSignIn } from './user.interface';
 import { User } from './user.model';
 
-// Sign In User
-const UserSignIn = async (data: IUser) => {
+// Sign Up User
+const UserSignUp = async (data: IUser) => {
   const hashPassword = await hashText(data.password);
 
   data.password = hashPassword;
@@ -42,7 +43,25 @@ const FindUser = async (email: string) => {
   return result;
 };
 
+// Sign In User
+const UserSignIn = async (data: IUserSignIn) => {
+  const { email, password } = data;
+
+  const isUserExit = await User.findOne({ email }).select('+password');
+  if (!isUserExit) throw new AppError('User not found', httpStatus.NOT_FOUND);
+
+  const isPasswordMatch = await bcrypt.compare(
+    password as string,
+    isUserExit.password as string,
+  );
+  if (!isPasswordMatch)
+    throw new AppError('Password not match', httpStatus.BAD_REQUEST);
+
+  return isPasswordMatch;
+};
+
 export const UserService = {
-  UserSignIn,
+  UserSignUp,
   FindUser,
+  UserSignIn,
 };
