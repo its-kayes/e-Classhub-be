@@ -104,6 +104,63 @@ const JoinClassroom = async (data: IPeople) => {
   }
 };
 
+// Get Requested People list for a Classroom
+const GetRequestedPeople = async (email: string, classCode: string) => {
+  //<---------------------------- Check if request made by authentic mentor ---------------------------->
+  const isMentorRequested = await Classroom.findOne({
+    mentorEmail: email,
+    classCode: classCode,
+  }).select('_id');
+
+  if (!isMentorRequested || isMentorRequested === null)
+    throw new AppError(
+      `You are not a mentor of this classroom`,
+      httpStatus.NOT_FOUND,
+    );
+
+  // <----------------- Get requested people details ----------------->
+  const details = await People.aggregate([
+    {
+      $match: {
+        classCode: classCode,
+        status: 'pending',
+      },
+    },
+    {
+      $sort: {
+        createdAt: 1,
+      },
+    },
+    {
+      $lookup: {
+        from: 'users',
+        localField: 'requestEmail',
+        foreignField: 'email',
+        as: 'userDetails',
+      },
+    },
+    {
+      $project: {
+        _id: 0,
+        requestEmail: 1,
+        status: 1,
+        userName: {
+          $arrayElemAt: ['$userDetails.name', 0],
+        },
+        gender: {
+          $arrayElemAt: ['$userDetails.gender', 0],
+        },
+        isVerified: {
+          $arrayElemAt: ['$userDetails.isVerified', 0],
+        },
+      },
+    },
+  ]);
+
+  return details;
+};
+
 export const PeopleService = {
   JoinClassroom,
+  GetRequestedPeople,
 };
