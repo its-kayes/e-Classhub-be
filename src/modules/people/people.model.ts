@@ -29,7 +29,7 @@ const peopleSchema = new Schema<IPeople>(
     status: {
       type: String,
       required: [true, 'Status is must required'],
-      enum: ['pending', 'reject', 'block', 'joined'],
+      enum: ['pending', 'block', 'joined'],
       default: 'pending',
     },
   },

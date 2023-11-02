@@ -4,7 +4,7 @@ import { Model } from 'mongoose';
 export type IPeople = {
   classCode: string;
   requestEmail: string;
-  status?: 'pending' | 'reject' | 'block' | 'approved';
+  status?: 'pending' | 'block' | 'joined';
   createdAt?: Date;
   updatedAt?: Date;
   _id?: string | ObjectId;

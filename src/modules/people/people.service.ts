@@ -9,90 +9,98 @@ import { Classroom } from '../classroom/classroom.model';
 const JoinClassroom = async (data: IPeople) => {
   const { classCode, requestEmail } = data;
 
-  // Check if user already joined
-  const isAlreadyIn = await People.findOne({
-    classCode,
-    requestEmail,
-    status: 'joined',
-  });
-  if (isAlreadyIn)
-    throw new AppError(
-      'You already joined this classroom',
-      httpStatus.CONFLICT,
-    );
-
-  // Check if user exit in pending list
-  const isPending = await People.findOne({
-    classCode,
-    requestEmail,
-    status: 'pending',
-  });
-  if (isPending)
-    throw new AppError(
-      'You already requested to join this classroom, please wait for the approval from the mentor',
-      httpStatus.CONFLICT,
-    );
-
   // Check if User Exit
   const isUserExit = await User.findOne({
     email: data.requestEmail,
     type: 'student',
   });
+
   if (!isUserExit)
     throw new AppError(
       `It's look like you haven't register yet with this email address (${data.requestEmail}), Please register as student to join a classroom!`,
       httpStatus.NOT_FOUND,
     );
 
-  // Check if class code is valid
-  const isClassCodeValid = await Classroom.findOne({
-    classCode: data.classCode,
-  }).select('classCode status');
+  const isRequested = await People.findOne({
+    classCode,
+    requestEmail,
+  }).select('status');
 
-  if (!isClassCodeValid)
-    throw new AppError(
-      `No class exit with this Class Code (${data.classCode})`,
-      httpStatus.NOT_FOUND,
-    );
+  if (!isRequested || isRequested === null) {
+    //  <----------------- Check if class code is valid ----------------->
+    const isClassCodeValid = await Classroom.findOne({
+      classCode: data.classCode,
+    }).select('classCode status');
 
-  switch (isClassCodeValid.status) {
-    case 'active': {
-      // Create new request
-      const newRequest = await People.create({
-        classCode,
-        requestEmail,
-        status: 'pending',
-      });
-      if (!newRequest)
+    if (!isClassCodeValid)
+      throw new AppError(
+        `No class exit with this Class Code (${data.classCode})`,
+        httpStatus.NOT_FOUND,
+      );
+
+    // <----------------- Check classroom activity and make join request ----------------->
+    switch (isClassCodeValid.status) {
+      case 'active': {
+        // Create new request
+        const newRequest = await People.create({
+          classCode,
+          requestEmail,
+          status: 'pending',
+        });
+        if (!newRequest)
+          throw new AppError(
+            'Something went wrong',
+            httpStatus.INTERNAL_SERVER_ERROR,
+          );
+        return newRequest;
+      }
+      case 'deactivated':
+        throw new AppError(
+          `You can't join this Classroom, because mentor deactivated the classroom.`,
+          httpStatus.NOT_ACCEPTABLE,
+        );
+
+      case 'deleted':
+        throw new AppError(
+          `You can't join this Classroom, because mentor deleted the classroom.`,
+          httpStatus.NOT_ACCEPTABLE,
+        );
+
+      case 'archived':
+        throw new AppError(
+          `You can't join this Classroom, because mentor archived the classroom.`,
+          httpStatus.NOT_ACCEPTABLE,
+        );
+
+      default:
         throw new AppError(
           'Something went wrong',
           httpStatus.INTERNAL_SERVER_ERROR,
         );
-      return newRequest;
     }
-    case 'deactivated':
-      throw new AppError(
-        `You can't join this Classroom, because mentor deactivated the classroom.`,
-        httpStatus.NOT_ACCEPTABLE,
-      );
+  } else {
+    switch (isRequested.status) {
+      case 'joined': {
+        throw new AppError(
+          `You already joined this classroom`,
+          httpStatus.BAD_REQUEST,
+        );
+      }
 
-    case 'deleted':
-      throw new AppError(
-        `You can't join this Classroom, because mentor deleted the classroom.`,
-        httpStatus.NOT_ACCEPTABLE,
-      );
+      case 'pending': {
+        throw new AppError(
+          'You already requested to join this classroom, please wait for the approval from the mentor',
+          httpStatus.CONFLICT,
+        );
+      }
 
-    case 'archived':
-      throw new AppError(
-        `You can't join this Classroom, because mentor archived the classroom.`,
-        httpStatus.NOT_ACCEPTABLE,
-      );
-
-    default:
-      throw new AppError(
-        'Something went wrong',
-        httpStatus.INTERNAL_SERVER_ERROR,
-      );
+      case 'block': {
+        throw new AppError(
+          'You are blocked by the mentor, please contact the mentor to unblock you',
+          httpStatus.NOT_ACCEPTABLE,
+        );
+      }
+    }
   }
 };
 
