@@ -47,7 +47,9 @@ const FindUser = async (email: string) => {
 const UserSignIn = async (data: IUserSignIn) => {
   const { email, password } = data;
 
-  const isUserExit = await User.findOne({ email }).select('+password');
+  const isUserExit = await User.findOne({ email }).select(
+    '+password +email +name +type',
+  );
   if (!isUserExit) throw new AppError('User not found', httpStatus.NOT_FOUND);
 
   const isPasswordMatch = await bcrypt.compare(
@@ -57,7 +59,13 @@ const UserSignIn = async (data: IUserSignIn) => {
   if (!isPasswordMatch)
     throw new AppError('Password not match', httpStatus.BAD_REQUEST);
 
-  return isPasswordMatch;
+  const finalData = {
+    id: isUserExit._id,
+    name: isUserExit.name,
+    email: isUserExit.email,
+    type: isUserExit.type,
+  };
+  return finalData;
 };
 
 export const UserService = {
