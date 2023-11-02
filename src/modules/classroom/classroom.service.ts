@@ -55,6 +55,7 @@ const CreateClassroom = async (data: ICreateClassroom) => {
   return returnObj;
 };
 
+// Find Classroom with Class code !
 const FindClassroom = async (classCode: string) => {
   const result = await Classroom.findOne({
     classCode,
