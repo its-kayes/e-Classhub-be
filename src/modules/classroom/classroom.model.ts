@@ -19,8 +19,8 @@ const classroomSchema = new Schema<IClassroom>(
       type: String,
       unique: true,
       required: [true, 'Class code is must required'],
-      minlength: [3, 'Class code must be at least 3 characters long'],
-      maxlength: [10, 'Class code must be at most 20 characters long'],
+      minlength: [14, 'Class code must be at least 14 characters long'],
+      maxlength: [14, 'Class code must be at most 14 characters long'],
       createIndexes: { unique: true },
     },
     mentorEmail: {
