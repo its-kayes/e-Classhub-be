@@ -29,7 +29,7 @@ const peopleSchema = new Schema<IPeople>(
     status: {
       type: String,
       required: [true, 'Status is must required'],
-      enum: ['pending', 'reject', 'block', 'approved'],
+      enum: ['pending', 'reject', 'block', 'joined'],
       default: 'pending',
     },
   },
@@ -38,4 +38,4 @@ const peopleSchema = new Schema<IPeople>(
   },
 );
 
-export const Classroom = model<IPeople, PeopleModel>('people', peopleSchema);
+export const People = model<IPeople, PeopleModel>('people', peopleSchema);

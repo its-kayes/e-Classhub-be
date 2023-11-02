@@ -7,7 +7,7 @@ export type IClassroom = {
   classCode: string;
   mentorEmail: string;
   mentorName: string;
-  status: 'active' | 'inactive' | 'deleted' | 'archived';
+  status: 'active' | 'deactivated' | 'deleted' | 'archived';
   createdAt?: Date;
   updatedAt?: Date;
   _id?: string | ObjectId;

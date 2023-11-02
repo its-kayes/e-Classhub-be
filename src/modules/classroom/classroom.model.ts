@@ -41,7 +41,7 @@ const classroomSchema = new Schema<IClassroom>(
     status: {
       type: String,
       required: [true, 'Status is must required'],
-      enum: ['active', 'inactive', 'deleted', 'archived'],
+      enum: ['active', 'deactivated', 'deleted', 'archived'],
       default: 'active',
     },
   },

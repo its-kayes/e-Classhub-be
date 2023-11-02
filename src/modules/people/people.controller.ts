@@ -27,7 +27,7 @@ const JoinClassroom: RequestHandler = catchAsync(async (req, res) => {
     res,
     result,
     httpStatus.OK,
-    'Join Classroom Success',
+    'Classroom Join request sent successfully!',
     true,
   );
 });
