@@ -35,13 +35,21 @@ const JoinClassroom: RequestHandler = catchAsync(async (req, res) => {
 
 // Get Requested People list for a Classroom
 const GetRequestedPeople: RequestHandler = catchAsync(async (req, res) => {
-  const { email, classCode } = req.params;
+  const { status, email, classCode } = req.params as {
+    status: 'pending' | 'block' | 'joined';
+    email: string;
+    classCode: string;
+  };
 
-  isRequestOk([classCode, email]);
+  isRequestOk([classCode, email, status]);
 
   await isClassCodeOk(classCode);
 
-  const result = await PeopleService.GetRequestedPeople(email, classCode);
+  const result = await PeopleService.GetRequestedPeople(
+    status,
+    email,
+    classCode,
+  );
   if (!result)
     throw new AppError(
       'Something went wrong',

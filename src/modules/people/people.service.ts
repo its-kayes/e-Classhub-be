@@ -105,7 +105,11 @@ const JoinClassroom = async (data: IPeople) => {
 };
 
 // Get Requested People list for a Classroom
-const GetRequestedPeople = async (email: string, classCode: string) => {
+const GetRequestedPeople = async (
+  status: 'pending' | 'block' | 'joined',
+  email: string,
+  classCode: string,
+) => {
   //<---------------------------- Check if request made by authentic mentor ---------------------------->
   const isMentorRequested = await Classroom.findOne({
     mentorEmail: email,
@@ -123,7 +127,7 @@ const GetRequestedPeople = async (email: string, classCode: string) => {
     {
       $match: {
         classCode: classCode,
-        status: 'pending',
+        status,
       },
     },
     {
@@ -141,7 +145,7 @@ const GetRequestedPeople = async (email: string, classCode: string) => {
     },
     {
       $project: {
-        _id: 0,
+        _id: 1,
         requestEmail: 1,
         status: 1,
         userName: {
