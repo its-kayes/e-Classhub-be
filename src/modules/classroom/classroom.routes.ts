@@ -5,4 +5,6 @@ const router: Router = Router();
 
 router.post('/create', ClassroomController.CreateClassroom);
 
+router.get('/find/:classCode', ClassroomController.FindClassroom);
+
 export { router as ClassroomRoutes };

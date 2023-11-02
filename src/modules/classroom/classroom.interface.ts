@@ -21,3 +21,11 @@ export type ICreateClassroom = {
   mentorEmail: string;
   mentorName: string;
 };
+
+export type IClassroomResponse = {
+  className: string;
+  shortTile: string;
+  classCode: string;
+  mentorName: string;
+  mentorEmail?: string;
+};

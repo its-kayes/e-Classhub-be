@@ -2,7 +2,11 @@ import { generateCode } from '../../util/generateCode';
 import httpStatus from 'http-status';
 import AppError from '../../errors/AppError';
 import { User } from '../user/user.model';
-import { IClassroom, ICreateClassroom } from './classroom.interface';
+import {
+  IClassroom,
+  IClassroomResponse,
+  ICreateClassroom,
+} from './classroom.interface';
 import { Classroom } from './classroom.model';
 
 // Create Classroom !
@@ -41,7 +45,7 @@ const CreateClassroom = async (data: ICreateClassroom) => {
       httpStatus.BAD_REQUEST,
     );
 
-  const returnObj = {
+  const returnObj: IClassroomResponse = {
     className: save.className,
     shortTile: save.shortTile,
     classCode: save.classCode,
@@ -51,6 +55,22 @@ const CreateClassroom = async (data: ICreateClassroom) => {
   return returnObj;
 };
 
+const FindClassroom = async (classCode: string) => {
+  const result = await Classroom.findOne({
+    classCode,
+    status: 'active',
+  }).select('-_id className shortTile classCode mentorName');
+
+  if (!result || result === null)
+    throw new AppError(
+      `Their is no classroom exit with this class code (${classCode}). Please check the class code and try again.`,
+      httpStatus.BAD_REQUEST,
+    );
+
+  return result;
+};
+
 export const ClassroomService = {
   CreateClassroom,
+  FindClassroom,
 };
