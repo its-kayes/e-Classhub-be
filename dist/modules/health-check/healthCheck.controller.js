@@ -8,13 +8,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-const catchAsync = (fn) => (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        yield fn(req, res, next);
-    }
-    catch (error) {
-        next(error);
-    }
-});
-exports.default = catchAsync;
+exports.HealthCheckController = void 0;
+const http_status_1 = __importDefault(require("http-status"));
+const throwResponse_1 = require("../../shared/throwResponse");
+const catchAsync_1 = __importDefault(require("../../util/catchAsync"));
+const Get = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    (0, throwResponse_1.throwResponse)(req, res, {}, http_status_1.default.OK, 'OK', true);
+}));
+exports.HealthCheckController = {
+    Get,
+};

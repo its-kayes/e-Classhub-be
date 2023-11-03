@@ -9,7 +9,7 @@ const classroomSchema = new Schema<IClassroom>(
       minlength: [3, 'Classroom name must be at least 3 characters long'],
       maxlength: [20, 'Classroom name must be at most 20 characters long'],
     },
-    shortTile: {
+    shortTitle: {
       type: String,
       required: [true, 'Short title is must required'],
       minlength: [3, 'Short title must be at least 3 characters long'],

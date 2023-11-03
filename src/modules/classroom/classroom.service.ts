@@ -1,6 +1,6 @@
-import { generateCode } from '../../util/generateCode';
 import httpStatus from 'http-status';
 import AppError from '../../errors/AppError';
+import { generateCode } from '../../util/generateCode';
 import { User } from '../user/user.model';
 import {
   IClassroom,
@@ -25,12 +25,12 @@ const CreateClassroom = async (data: ICreateClassroom) => {
     );
 
   // <----------------------- Generate Class Code  ----------------------->
-  const firstFourLetter = data.shortTile.substring(0, 4).toUpperCase();
+  const firstFourLetter = data.shortTitle.substring(0, 4).toUpperCase();
   const classCode = `${generateCode()}-${firstFourLetter}-${generateCode()}`;
 
   const finalObj: IClassroom = {
     className: data.className,
-    shortTile: data.shortTile,
+    shortTitle: data.shortTitle,
     mentorEmail: data.mentorEmail,
     mentorName: data.mentorName,
     status: 'active',
@@ -47,7 +47,7 @@ const CreateClassroom = async (data: ICreateClassroom) => {
 
   const returnObj: IClassroomResponse = {
     className: save.className,
-    shortTile: save.shortTile,
+    shortTitle: save.shortTitle,
     classCode: save.classCode,
     mentorName: save.mentorName,
   };
@@ -60,7 +60,7 @@ const FindClassroom = async (classCode: string) => {
   const result = await Classroom.findOne({
     classCode,
     status: 'active',
-  }).select('-_id className shortTile classCode mentorName');
+  }).select('-_id className shortTitle classCode mentorName');
 
   if (!result || result === null)
     throw new AppError(

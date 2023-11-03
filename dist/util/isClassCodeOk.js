@@ -8,13 +8,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-const catchAsync = (fn) => (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        yield fn(req, res, next);
-    }
-    catch (error) {
-        next(error);
-    }
+exports.isClassCodeOk = void 0;
+const http_status_1 = __importDefault(require("http-status"));
+const AppError_1 = __importDefault(require("../errors/AppError"));
+const isClassCodeOk = (classCode) => __awaiter(void 0, void 0, void 0, function* () {
+    const classCodeRegex = /^[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$/;
+    if (!classCodeRegex.test(classCode))
+        throw new AppError_1.default('Invalid Class Code Structured', http_status_1.default.NOT_ACCEPTABLE);
 });
-exports.default = catchAsync;
+exports.isClassCodeOk = isClassCodeOk;

@@ -3,7 +3,7 @@ import { Model } from 'mongoose';
 
 export type IClassroom = {
   className: string;
-  shortTile: string;
+  shortTitle: string;
   classCode: string;
   mentorEmail: string;
   mentorName: string;
@@ -17,14 +17,14 @@ export type ClassroomModel = Model<IClassroom, Record<string, unknown>>;
 
 export type ICreateClassroom = {
   className: string;
-  shortTile: string;
+  shortTitle: string;
   mentorEmail: string;
   mentorName: string;
 };
 
 export type IClassroomResponse = {
   className: string;
-  shortTile: string;
+  shortTitle: string;
   classCode: string;
   mentorName: string;
   mentorEmail?: string;

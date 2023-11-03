@@ -1,23 +1,23 @@
 import { RequestHandler } from 'express';
-import catchAsync from '../../util/catchAsync';
-import { ICreateClassroom } from './classroom.interface';
-import { isRequiredOk } from '../../util/isRequiredOk';
-import { ClassroomService } from './classroom.service';
-import AppError from '../../errors/AppError';
 import httpStatus from 'http-status';
+import AppError from '../../errors/AppError';
 import { throwResponse } from '../../shared/throwResponse';
+import catchAsync from '../../util/catchAsync';
 import { isClassCodeOk } from '../../util/isClassCodeOk';
+import { isRequiredOk } from '../../util/isRequiredOk';
+import { ICreateClassroom } from './classroom.interface';
+import { ClassroomService } from './classroom.service';
 
 // Create Classroom !
 const CreateClassroom: RequestHandler = catchAsync(async (req, res) => {
-  const { className, shortTile, mentorEmail, mentorName } =
+  const { className, shortTitle, mentorEmail, mentorName } =
     req.body as ICreateClassroom;
 
-  isRequiredOk({ className, shortTile, mentorEmail, mentorName });
+  isRequiredOk({ className, shortTitle, mentorEmail, mentorName });
 
   const result = await ClassroomService.CreateClassroom({
     className,
-    shortTile,
+    shortTitle,
     mentorEmail,
     mentorName,
   });

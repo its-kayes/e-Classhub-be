@@ -8,13 +8,18 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-const catchAsync = (fn) => (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        yield fn(req, res, next);
-    }
-    catch (error) {
-        next(error);
-    }
+exports.hashText = void 0;
+const bcryptjs_1 = __importDefault(require("bcryptjs"));
+const http_status_1 = __importDefault(require("http-status"));
+const AppError_1 = __importDefault(require("../errors/AppError"));
+const hashText = (password) => __awaiter(void 0, void 0, void 0, function* () {
+    if (!password)
+        throw new AppError_1.default('Please provide the text that you wants to hashed ', http_status_1.default.BAD_REQUEST);
+    const salt = yield bcryptjs_1.default.genSalt(10);
+    return yield bcryptjs_1.default.hash(password, salt);
 });
-exports.default = catchAsync;
+exports.hashText = hashText;
