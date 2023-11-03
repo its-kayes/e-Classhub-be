@@ -26,8 +26,8 @@ const CreateClassroom = async (data: ICreateClassroom) => {
     );
 
   // <----------------------- Generate Class Code  ----------------------->
-  const firstFourLetter = data.shortTitle.substring(0, 4).toUpperCase();
-  const classCode = `${generateCode()}-${firstFourLetter}-${generateCode()}`;
+  const presentDate = Date.now().toString().substring(9, 13).toUpperCase();
+  const classCode = `${generateCode()}-${presentDate}-${generateCode()}`;
 
   const finalObj: IClassroom = {
     className: data.className,
