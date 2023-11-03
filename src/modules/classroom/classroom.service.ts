@@ -1,6 +1,7 @@
 import httpStatus from 'http-status';
 import AppError from '../../errors/AppError';
 import { generateCode } from '../../util/generateCode';
+import { People } from '../people/people.model';
 import { User } from '../user/user.model';
 import {
   IClassroom,
@@ -97,7 +98,45 @@ const MentorClassroomList = async (email: string) => {
 
 // List all Classrooms (Student Based) !
 const StudentClassroomList = async (email: string) => {
-  return email;
+  // <----------------------- Check if student is exist or not ----------------------->
+  const isStudent = await User.findOne({ email }).select('_id type');
+  if (!isStudent || isStudent === null || isStudent.type !== 'student') {
+    throw new AppError(
+      `It's look like you (${email}) aren't a student.`,
+      httpStatus.UNAUTHORIZED,
+    );
+  }
+
+  const result = await People.aggregate([
+    {
+      $match: {
+        requestEmail: email,
+        status: 'joined',
+      },
+    },
+    {
+      $lookup: {
+        from: 'classrooms',
+        localField: 'classCode',
+        foreignField: 'classCode',
+        as: 'classroom',
+      },
+    },
+    {
+      $unwind: '$classroom',
+    },
+    {
+      $project: {
+        _id: 0,
+        className: '$classroom.className',
+        shortTitle: '$classroom.shortTitle',
+        classCode: '$classroom.classCode',
+        mentorName: '$classroom.mentorName',
+      },
+    },
+  ]);
+
+  return result;
 };
 
 export const ClassroomService = {
