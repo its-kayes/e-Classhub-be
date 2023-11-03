@@ -3,8 +3,10 @@ import { ClassroomController } from './classroom.controller';
 
 const router: Router = Router();
 
-router.post('/create', ClassroomController.CreateClassroom);
+router.post('/create', ClassroomController.CreateClassroom); // Create Classroom
 
-router.get('/find/:classCode', ClassroomController.FindClassroom);
+router.get('/find/:classCode', ClassroomController.FindClassroom); // Find Classroom by classCode
+
+router.get('/mentor/list/:email', ClassroomController.MentorClassroomList); // List all Classrooms (mentor Based);
 
 export { router as ClassroomRoutes };

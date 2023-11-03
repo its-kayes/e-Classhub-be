@@ -71,7 +71,32 @@ const FindClassroom = async (classCode: string) => {
   return result;
 };
 
+// List all Classrooms (User Based) !
+const MentorClassroomList = async (email: string) => {
+  const isMentor = await User.findOne({ email }).select('_id type');
+  if (!isMentor || isMentor === null || isMentor.type !== 'mentor') {
+    throw new AppError(
+      `It's look like you (${email}) aren't a mentor.`,
+      httpStatus.UNAUTHORIZED,
+    );
+  }
+
+  const result = await Classroom.find({
+    mentorEmail: email,
+    status: 'active',
+  }).select('-_id className shortTitle classCode mentorName');
+
+  if (!result || result === null)
+    throw new AppError(
+      `Their is no classroom exit with this email (${email}). Please check the email and try again.`,
+      httpStatus.BAD_REQUEST,
+    );
+
+  return result;
+};
+
 export const ClassroomService = {
   CreateClassroom,
   FindClassroom,
+  MentorClassroomList,
 };
