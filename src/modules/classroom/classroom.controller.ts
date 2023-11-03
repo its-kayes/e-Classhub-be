@@ -106,9 +106,40 @@ const StudentClassroomList: RequestHandler = catchAsync(async (req, res) => {
   );
 });
 
+// List all Classrooms (User Based) !
+const ClassroomList: RequestHandler = catchAsync(async (req, res) => {
+  const { email, type } = req.params as {
+    email: string;
+    type: 'mentor' | 'student';
+  };
+  if (!email) throw new AppError('Email is required', httpStatus.BAD_REQUEST);
+  if (!type || (type !== 'mentor' && type !== 'student'))
+    throw new AppError(
+      'Type is required, either it can be only mentor or student',
+      httpStatus.BAD_REQUEST,
+    );
+
+  const result = await ClassroomService.MentorClassroomList(email);
+  if (!result)
+    throw new AppError(
+      'Something went wrong',
+      httpStatus.INTERNAL_SERVER_ERROR,
+    );
+
+  return throwResponse(
+    req,
+    res,
+    result,
+    httpStatus.OK,
+    'Successfully fetched classrooms!',
+    true,
+  );
+});
+
 export const ClassroomController = {
   CreateClassroom,
   FindClassroom,
+  ClassroomList,
   MentorClassroomList,
   StudentClassroomList,
 };

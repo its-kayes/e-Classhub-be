@@ -139,9 +139,80 @@ const StudentClassroomList = async (email: string) => {
   return result;
 };
 
+// List all Classrooms (User Based) !
+const ClassroomList = async (email: string, type: 'mentor' | 'student') => {
+  switch (type) {
+    case 'mentor': {
+      // <----------------------- Check if mentor is exist or not ----------------------->
+      const isMentor = await User.findOne({ email }).select('_id type');
+      if (!isMentor || isMentor === null || isMentor.type !== 'mentor') {
+        throw new AppError(
+          `It's look like you (${email}) aren't a mentor.`,
+          httpStatus.UNAUTHORIZED,
+        );
+      }
+
+      const result = await Classroom.find({
+        mentorEmail: email,
+        status: 'active',
+      }).select('-_id className shortTitle classCode mentorName');
+
+      if (!result || result === null)
+        throw new AppError(
+          `Their is no classroom exit with this email (${email}). Please check the email and try again.`,
+          httpStatus.BAD_REQUEST,
+        );
+
+      return result;
+    }
+    case 'student': {
+      // <----------------------- Check if student is exist or not ----------------------->
+      const isStudent = await User.findOne({ email }).select('_id type');
+      if (!isStudent || isStudent === null || isStudent.type !== 'student') {
+        throw new AppError(
+          `It's look like you (${email}) aren't a student.`,
+          httpStatus.UNAUTHORIZED,
+        );
+      }
+
+      const result = await People.aggregate([
+        {
+          $match: {
+            requestEmail: email,
+            status: 'joined',
+          },
+        },
+        {
+          $lookup: {
+            from: 'classrooms',
+            localField: 'classCode',
+            foreignField: 'classCode',
+            as: 'classroom',
+          },
+        },
+        {
+          $unwind: '$classroom',
+        },
+        {
+          $project: {
+            _id: 0,
+            className: '$classroom.className',
+            shortTitle: '$classroom.shortTitle',
+            classCode: '$classroom.classCode',
+            mentorName: '$classroom.mentorName',
+          },
+        },
+      ]);
+
+      return result;
+    }
+  }
+};
+
 export const ClassroomService = {
   CreateClassroom,
   FindClassroom,
+  ClassroomList,
   MentorClassroomList,
   StudentClassroomList,
 };

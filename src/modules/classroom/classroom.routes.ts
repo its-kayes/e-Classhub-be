@@ -11,4 +11,6 @@ router.get('/mentor/list/:email', ClassroomController.MentorClassroomList); // L
 
 router.get('/student/list/:email', ClassroomController.StudentClassroomList); // List all Classrooms (student Based);
 
+router.get('/:type/list/:email', ClassroomController.ClassroomList); // List all Classrooms (User Based);
+
 export { router as ClassroomRoutes };
