@@ -9,4 +9,6 @@ router.get('/find/:classCode', ClassroomController.FindClassroom); // Find Class
 
 router.get('/mentor/list/:email', ClassroomController.MentorClassroomList); // List all Classrooms (mentor Based);
 
+router.get('/student/list/:email', ClassroomController.StudentClassroomList); // List all Classrooms (student Based);
+
 export { router as ClassroomRoutes };

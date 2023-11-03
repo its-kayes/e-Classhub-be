@@ -62,7 +62,7 @@ const FindClassroom: RequestHandler = catchAsync(async (req, res) => {
   );
 });
 
-// List all Classrooms (User Based) !
+// List all Classrooms (Mentor Based) !
 const MentorClassroomList: RequestHandler = catchAsync(async (req, res) => {
   const { email } = req.params as { email: string };
   if (!email) throw new AppError('Email is required', httpStatus.BAD_REQUEST);
@@ -84,8 +84,31 @@ const MentorClassroomList: RequestHandler = catchAsync(async (req, res) => {
   );
 });
 
+// List all Classrooms (Student Based) !
+const StudentClassroomList: RequestHandler = catchAsync(async (req, res) => {
+  const { email } = req.params as { email: string };
+  if (!email) throw new AppError('Email is required', httpStatus.BAD_REQUEST);
+
+  const result = await ClassroomService.StudentClassroomList(email);
+  if (!result)
+    throw new AppError(
+      'Something went wrong',
+      httpStatus.INTERNAL_SERVER_ERROR,
+    );
+
+  return throwResponse(
+    req,
+    res,
+    result,
+    httpStatus.OK,
+    'Successfully fetched classrooms!',
+    true,
+  );
+});
+
 export const ClassroomController = {
   CreateClassroom,
   FindClassroom,
   MentorClassroomList,
+  StudentClassroomList,
 };

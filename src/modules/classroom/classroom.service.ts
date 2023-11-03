@@ -71,7 +71,7 @@ const FindClassroom = async (classCode: string) => {
   return result;
 };
 
-// List all Classrooms (User Based) !
+// List all Classrooms (Mentor Based) !
 const MentorClassroomList = async (email: string) => {
   const isMentor = await User.findOne({ email }).select('_id type');
   if (!isMentor || isMentor === null || isMentor.type !== 'mentor') {
@@ -95,8 +95,14 @@ const MentorClassroomList = async (email: string) => {
   return result;
 };
 
+// List all Classrooms (Student Based) !
+const StudentClassroomList = async (email: string) => {
+  return email;
+};
+
 export const ClassroomService = {
   CreateClassroom,
   FindClassroom,
   MentorClassroomList,
+  StudentClassroomList,
 };
