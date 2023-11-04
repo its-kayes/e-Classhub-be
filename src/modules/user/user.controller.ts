@@ -78,8 +78,34 @@ const UserSignIn: RequestHandler = catchAsync(async (req, res) => {
   );
 });
 
+//Update Name Title
+const UpdateNameTitle: RequestHandler = catchAsync(async (req, res) => {
+  const { name, title } = req.body as { name: string; title: string };
+  const { email } = req.params as { email: string };
+
+  isRequestOk([name, title, email]);
+
+  const result = await UserService.UpdateNameTitle(name, title, email);
+
+  if (!result)
+    throw new AppError(
+      'Something went wrong',
+      httpStatus.INTERNAL_SERVER_ERROR,
+    );
+
+  return throwResponse(
+    req,
+    res,
+    result,
+    httpStatus.OK,
+    'Name and Title Updated',
+    true,
+  );
+});
+
 export const UserController = {
   FindUser,
   UserSignUp,
   UserSignIn,
+  UpdateNameTitle,
 };

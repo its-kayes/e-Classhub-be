@@ -68,8 +68,23 @@ const UserSignIn = async (data: IUserSignIn) => {
   return finalData;
 };
 
+//Update Name Title
+const UpdateNameTitle = async (name: string, title: string, email: string) => {
+  const result = await User.findOneAndUpdate(
+    { email },
+    { title, name },
+    { new: true },
+  ).select(['name', 'title']);
+
+  if (!result || result === null)
+    throw new AppError('No user found', httpStatus.NOT_FOUND);
+
+  return result;
+};
+
 export const UserService = {
   UserSignUp,
   FindUser,
   UserSignIn,
+  UpdateNameTitle,
 };

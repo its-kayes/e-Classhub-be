@@ -9,4 +9,6 @@ router.post('/sign-up', UserController.UserSignUp); // Sign In User //TODO: Vali
 
 router.post('/sign-in', UserController.UserSignIn); // Sign Up User
 
+router.patch('/update-name-title/:email', UserController.UpdateNameTitle); // Update Name and Title
+
 export { router as UserRoutes };
