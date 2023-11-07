@@ -4,6 +4,7 @@ import uap from 'ua-parser-js';
 import AppError from '../../errors/AppError';
 import { Tracker } from './tracker.model';
 
+//  Save Log
 export const logTracker = async (
   email: string,
   req: Request,
@@ -36,4 +37,12 @@ export const logTracker = async (
       httpStatus.INTERNAL_SERVER_ERROR,
     );
   }
+};
+
+const GetUserBasedLogHistory = async (email: string) => {
+  return email;
+};
+
+export const TrackerService = {
+  GetUserBasedLogHistory,
 };
