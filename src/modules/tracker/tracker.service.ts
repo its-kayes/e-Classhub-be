@@ -39,8 +39,44 @@ export const logTracker = async (
   }
 };
 
+// Get User Based Log History
 const GetUserBasedLogHistory = async (email: string) => {
-  return email;
+  const result = await Tracker.aggregate([
+    {
+      $match: {
+        email,
+      },
+    },
+    {
+      $group: {
+        _id: '$_id',
+        browser: {
+          $first: '$browser',
+        },
+        os: {
+          $first: '$os',
+        },
+        cpu: {
+          $first: '$cpu',
+        },
+        date: {
+          $first: {
+            $dateToString: {
+              format: '%Y-%m-%d | %H:%M:%S',
+              date: '$createdAt',
+            },
+          },
+        },
+      },
+    },
+    {
+      $sort: {
+        date: -1,
+      },
+    },
+  ]);
+
+  return result;
 };
 
 export const TrackerService = {
