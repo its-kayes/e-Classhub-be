@@ -5,7 +5,6 @@ const announcementSchema = new Schema<IAnnouncement>(
   {
     classCode: {
       type: String,
-      unique: true,
       required: [true, 'Class code is must required'],
       minlength: [14, 'Class code must be at least 14 characters long'],
       maxlength: [14, 'Class code must be at most 14 characters long'],

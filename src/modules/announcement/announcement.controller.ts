@@ -22,13 +22,15 @@ const CreateAnnouncement: RequestHandler = catchAsync(async (req, res) => {
 
   await isClassCodeOk(classCode);
 
-  const result = await AnnouncementService.CreateAnnouncement({
-    classCode,
-    description,
-    materials,
-  });
+  let result;
+  if (!materials) {
+    result = await AnnouncementService.CreateAnnouncement({
+      classCode,
+      description,
+    });
+  }
 
-  if (!result)
+  if (!result || result === undefined)
     throw new AppError('Announcement not created', httpStatus.BAD_REQUEST);
 
   return throwResponse(
