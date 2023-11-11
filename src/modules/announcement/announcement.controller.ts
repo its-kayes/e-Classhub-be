@@ -5,7 +5,6 @@ import { throwResponse } from '../../shared/throwResponse';
 import catchAsync from '../../util/catchAsync';
 import { isClassCodeOk } from '../../util/isClassCodeOk';
 import { IAnnouncement } from './announcement.interface';
-import { AnnouncementService } from './announcement.service';
 
 // Create Announcement
 const CreateAnnouncement: RequestHandler = catchAsync(async (req, res) => {
@@ -23,12 +22,23 @@ const CreateAnnouncement: RequestHandler = catchAsync(async (req, res) => {
   await isClassCodeOk(classCode);
 
   let result;
-  if (!materials) {
-    result = await AnnouncementService.CreateAnnouncement({
-      classCode,
-      description,
-    });
+  // if (!materials) {
+  //   result = await AnnouncementService.CreateAnnouncement({
+  //     classCode,
+  //     description,
+  //   });
+  // } else {
+
+  if (!req.files || !('materials' in req.files)) {
+    throw new AppError('Please upload necessary files', httpStatus.BAD_REQUEST);
   }
+
+  const allMaterials = (req.files as unknown as { [fieldname: string]: File[] })
+    .materials;
+
+  console.log('materials', allMaterials);
+
+  // }
 
   if (!result || result === undefined)
     throw new AppError('Announcement not created', httpStatus.BAD_REQUEST);
