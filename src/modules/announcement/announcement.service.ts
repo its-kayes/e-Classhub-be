@@ -1,7 +1,7 @@
 import { IAnnouncement } from './announcement.interface';
 
 const CreateAnnouncement = async (announcement: IAnnouncement) => {
-  return announcement;
+  return await announcement;
 };
 
 export const AnnouncementService = {
