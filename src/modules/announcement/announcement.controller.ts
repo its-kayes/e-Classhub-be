@@ -5,6 +5,7 @@ import { throwResponse } from '../../shared/throwResponse';
 import catchAsync from '../../util/catchAsync';
 import { isClassCodeOk } from '../../util/isClassCodeOk';
 import { IAnnouncement } from './announcement.interface';
+import { AnnouncementService, CustomFile } from './announcement.service';
 
 // Create Announcement
 const CreateAnnouncement: RequestHandler = catchAsync(async (req, res) => {
@@ -37,6 +38,23 @@ const CreateAnnouncement: RequestHandler = catchAsync(async (req, res) => {
     .materials;
 
   console.log('materials', allMaterials);
+
+  const response = await AnnouncementService.CreateAnnouncementWithMaterials({
+    classCode,
+    description,
+    materials: allMaterials as CustomFile[],
+  });
+
+  return throwResponse(
+    req,
+    res,
+    response,
+    httpStatus.CREATED,
+    'Successfully make announcement',
+    true,
+  );
+
+  console.log('response', response);
 
   // }
 
