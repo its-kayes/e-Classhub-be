@@ -9,10 +9,13 @@ import { AnnouncementService } from './announcement.service';
 
 // Create Announcement
 const CreateAnnouncement: RequestHandler = catchAsync(async (req, res) => {
-  const { classCode, description } = req.body as IAnnouncement;
+  const { classCode, description, email } = req.body as IAnnouncement;
 
-  if (!classCode)
-    throw new AppError('Class Code is required', httpStatus.BAD_REQUEST);
+  if (!classCode || !email)
+    throw new AppError(
+      'Class Code & Email is required',
+      httpStatus.BAD_REQUEST,
+    );
 
   await isClassCodeOk(classCode);
 
@@ -34,6 +37,7 @@ const CreateAnnouncement: RequestHandler = catchAsync(async (req, res) => {
     classCode,
     description,
     materials: chunkFiles,
+    email,
   });
 
   return throwResponse(

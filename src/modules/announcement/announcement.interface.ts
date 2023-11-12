@@ -13,6 +13,7 @@ export type IAnnouncement = {
   createdAt?: Date;
   updatedAt?: Date;
   id?: string | ObjectId;
+  email?: string;
 };
 
 export type AnnouncementModel = Model<IAnnouncement, Record<string, unknown>>;

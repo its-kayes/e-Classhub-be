@@ -1,6 +1,7 @@
 import httpStatus from 'http-status';
 import AppError from '../../errors/AppError';
 import { Classroom } from '../classroom/classroom.model';
+import { People } from '../people/people.model';
 import { bulkUpload } from './announcement.helper';
 import { IAnnouncement } from './announcement.interface';
 import { Announcement } from './announcement.model';
@@ -16,6 +17,7 @@ const CreateAnnouncement = async (data: {
         mimetype: string;
       }[]
     | null;
+  email: string;
 }) => {
   const isCodeOk = await Classroom.findOne({
     classCode: data.classCode,
@@ -24,14 +26,32 @@ const CreateAnnouncement = async (data: {
   if (!isCodeOk)
     throw new AppError('Class code is not valid', httpStatus.UNAUTHORIZED);
 
-  // TODO: Also Validate if user have permission to make announcement ?
+  // <---------------- Is he / she has the permission to make an announcement  -------------->
+  const isRightMentor = await Classroom.findOne({
+    classCode: data.classCode,
+    mentorEmail: data.email,
+  });
 
+  const isRightStudent = await People.findOne({
+    classCode: data.classCode,
+    requestEmail: data.email,
+    status: 'joined',
+  });
+
+  if (!isRightMentor || !isRightStudent)
+    throw new AppError(
+      'You are not allowed to make announcement',
+      httpStatus.UNAUTHORIZED,
+    );
+
+  //
   const announcement: IAnnouncement = {
     classCode: data.classCode,
     description: data.description || null,
     materials: null,
   };
 
+  // <------------------ Upload Audio files to AWS S3 ------------------>
   if (data.materials) {
     const audioFileLinks = await Promise.all(
       data.materials.map(async file => {
@@ -45,6 +65,7 @@ const CreateAnnouncement = async (data: {
     announcement.materials = audioFileLinks;
   }
 
+  // <------------------ Save Announcement ------------------>
   const save = await Announcement.create(announcement);
   if (!save || !save._id)
     throw new AppError('Announcement not created', httpStatus.BAD_REQUEST);
