@@ -5,7 +5,7 @@ import { throwResponse } from '../../shared/throwResponse';
 import catchAsync from '../../util/catchAsync';
 import { isClassCodeOk } from '../../util/isClassCodeOk';
 import { IAnnouncement } from './announcement.interface';
-import { AnnouncementService, CustomFile } from './announcement.service';
+import { AnnouncementService } from './announcement.service';
 
 // Create Announcement
 const CreateAnnouncement: RequestHandler = catchAsync(async (req, res) => {
@@ -34,15 +34,16 @@ const CreateAnnouncement: RequestHandler = catchAsync(async (req, res) => {
     throw new AppError('Please upload necessary files', httpStatus.BAD_REQUEST);
   }
 
-  const allMaterials = (req.files as unknown as { [fieldname: string]: File[] })
-    .materials;
-
-  console.log('materials', allMaterials);
+  const chunkFiles = req.files['materials'].map(file => ({
+    name: `${classCode}_${file.originalname}`.toLowerCase(),
+    buffer: file.buffer,
+    mimetype: file.mimetype,
+  }));
 
   const response = await AnnouncementService.CreateAnnouncementWithMaterials({
     classCode,
     description,
-    materials: allMaterials as CustomFile[],
+    materials: chunkFiles,
   });
 
   return throwResponse(

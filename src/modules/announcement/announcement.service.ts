@@ -1,6 +1,7 @@
 import httpStatus from 'http-status';
 import AppError from '../../errors/AppError';
 import { Classroom } from '../classroom/classroom.model';
+import { bulkUpload } from './announcement.helper';
 import { IAnnouncement } from './announcement.interface';
 import { Announcement } from './announcement.model';
 
@@ -26,18 +27,16 @@ const CreateAnnouncement = async (announcement: IAnnouncement) => {
   };
 };
 
-type NewFile = {
-  originalname: string;
-};
-
-export type CustomFile = NewFile & File;
-
 // TODO: Create Announcement With Materials
 const CreateAnnouncementWithMaterials = async (data: {
   classCode: string;
   description?: string;
-  materials?: CustomFile[];
-}): Promise<IAnnouncement> => {
+  materials?: {
+    name: string;
+    buffer: Buffer;
+    mimetype: string;
+  }[];
+}) => {
   const isCodeOk = await Classroom.findOne({
     classCode: data.classCode,
   });
@@ -52,16 +51,17 @@ const CreateAnnouncementWithMaterials = async (data: {
   };
 
   if (data.materials) {
-    announcement.materials = data.materials.map(file => {
-      const name = `${data.classCode}-${file.originalname}`.toLowerCase();
-      return {
-        name,
-        url: `uploads/${name}`,
-      };
-    });
-  }
+    const audioFileLinks = await Promise.all(
+      data.materials.map(async file => {
+        const link = await bulkUpload(file.name, file.buffer, file.mimetype);
+        return {
+          url: link as string,
+        };
+      }),
+    ).then(data => data);
 
-  // const links = await Promise.all(allLinks || []);
+    announcement.materials = audioFileLinks;
+  }
 
   return announcement;
 };
