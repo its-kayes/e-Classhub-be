@@ -4,6 +4,7 @@ import AppError from '../../errors/AppError';
 import { throwResponse } from '../../shared/throwResponse';
 import catchAsync from '../../util/catchAsync';
 import { isClassCodeOk } from '../../util/isClassCodeOk';
+import { formatFileName } from './announcement.helper';
 import { IAnnouncement } from './announcement.interface';
 import { AnnouncementService } from './announcement.service';
 
@@ -27,7 +28,8 @@ const CreateAnnouncement: RequestHandler = catchAsync(async (req, res) => {
     req.files['materials'].length > 0
   ) {
     chunkFiles = req.files['materials'].map(file => ({
-      name: `${classCode}_${file.originalname}`.toLowerCase(),
+      // name: `${classCode}_${file.originalname}`.toLowerCase(),
+      name: formatFileName(classCode, file.originalname),
       buffer: file.buffer,
       mimetype: file.mimetype,
     }));

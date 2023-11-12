@@ -38,7 +38,7 @@ const CreateAnnouncement = async (data: {
     status: 'joined',
   });
 
-  if (!isRightMentor || !isRightStudent)
+  if (!isRightMentor && !isRightStudent)
     throw new AppError(
       'You are not allowed to make announcement',
       httpStatus.UNAUTHORIZED,

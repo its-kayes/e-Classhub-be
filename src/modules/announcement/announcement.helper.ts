@@ -36,3 +36,19 @@ export const bulkUpload = (
     });
   });
 };
+
+export const formatFileName = (
+  classCode: string,
+  originalName: string,
+): string => {
+  // Remove spaces and replace with underscores
+  const formattedName = originalName.replace(
+    /[\s!@#$%^&*()_+={}[\]:;<>,.?~\\/-]/g,
+    '_',
+  );
+
+  // Concatenate classCode and formattedName, convert to lowercase
+  const result = `${classCode}_${formattedName}`.toLowerCase();
+
+  return result;
+};
