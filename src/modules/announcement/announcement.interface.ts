@@ -4,10 +4,12 @@ import { Model } from 'mongoose';
 export type IAnnouncement = {
   classCode: string;
   date?: Date;
-  description?: string;
-  materials?: {
-    url: string;
-  }[];
+  description?: string | null;
+  materials?:
+    | {
+        url: string;
+      }[]
+    | null;
   createdAt?: Date;
   updatedAt?: Date;
   id?: string | ObjectId;

@@ -9,36 +9,26 @@ import { AnnouncementService } from './announcement.service';
 
 // Create Announcement
 const CreateAnnouncement: RequestHandler = catchAsync(async (req, res) => {
-  const { classCode, description, materials } = req.body as IAnnouncement;
+  const { classCode, description } = req.body as IAnnouncement;
 
   if (!classCode)
     throw new AppError('Class Code is required', httpStatus.BAD_REQUEST);
 
-  if (!description && !materials)
-    throw new AppError(
-      'Announcement Materials or Topic must be needed to create announcement',
-      httpStatus.BAD_REQUEST,
-    );
-
   await isClassCodeOk(classCode);
 
-  let result;
-  // if (!materials) {
-  //   result = await AnnouncementService.CreateAnnouncement({
-  //     classCode,
-  //     description,
-  //   });
-  // } else {
+  let chunkFiles: { name: string; buffer: Buffer; mimetype: string }[] = [];
 
-  if (!req.files || !('materials' in req.files)) {
-    throw new AppError('Please upload necessary files', httpStatus.BAD_REQUEST);
+  if (
+    req.files &&
+    'materials' in req.files &&
+    req.files['materials'].length > 0
+  ) {
+    chunkFiles = req.files['materials'].map(file => ({
+      name: `${classCode}_${file.originalname}`.toLowerCase(),
+      buffer: file.buffer,
+      mimetype: file.mimetype,
+    }));
   }
-
-  const chunkFiles = req.files['materials'].map(file => ({
-    name: `${classCode}_${file.originalname}`.toLowerCase(),
-    buffer: file.buffer,
-    mimetype: file.mimetype,
-  }));
 
   const response = await AnnouncementService.CreateAnnouncementWithMaterials({
     classCode,
@@ -50,22 +40,6 @@ const CreateAnnouncement: RequestHandler = catchAsync(async (req, res) => {
     req,
     res,
     response,
-    httpStatus.CREATED,
-    'Successfully make announcement',
-    true,
-  );
-
-  console.log('response', response);
-
-  // }
-
-  if (!result || result === undefined)
-    throw new AppError('Announcement not created', httpStatus.BAD_REQUEST);
-
-  return throwResponse(
-    req,
-    res,
-    result,
     httpStatus.CREATED,
     'Successfully make announcement',
     true,

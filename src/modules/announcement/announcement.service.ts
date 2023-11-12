@@ -30,12 +30,14 @@ const CreateAnnouncement = async (announcement: IAnnouncement) => {
 // TODO: Create Announcement With Materials
 const CreateAnnouncementWithMaterials = async (data: {
   classCode: string;
-  description?: string;
-  materials?: {
-    name: string;
-    buffer: Buffer;
-    mimetype: string;
-  }[];
+  description?: string | null;
+  materials?:
+    | {
+        name: string;
+        buffer: Buffer;
+        mimetype: string;
+      }[]
+    | null;
 }) => {
   const isCodeOk = await Classroom.findOne({
     classCode: data.classCode,
@@ -46,8 +48,8 @@ const CreateAnnouncementWithMaterials = async (data: {
 
   const announcement: IAnnouncement = {
     classCode: data.classCode,
-    description: data.description || '',
-    materials: [],
+    description: data.description || null,
+    materials: null,
   };
 
   if (data.materials) {
