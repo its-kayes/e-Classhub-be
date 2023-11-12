@@ -30,7 +30,7 @@ const CreateAnnouncement: RequestHandler = catchAsync(async (req, res) => {
     }));
   }
 
-  const response = await AnnouncementService.CreateAnnouncementWithMaterials({
+  const response = await AnnouncementService.CreateAnnouncement({
     classCode,
     description,
     materials: chunkFiles,

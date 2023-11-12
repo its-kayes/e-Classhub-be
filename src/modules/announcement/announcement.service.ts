@@ -5,30 +5,8 @@ import { bulkUpload } from './announcement.helper';
 import { IAnnouncement } from './announcement.interface';
 import { Announcement } from './announcement.model';
 
-const CreateAnnouncement = async (announcement: IAnnouncement) => {
-  const isCodeOk = await Classroom.findOne({
-    classCode: announcement.classCode,
-  });
-
-  if (!isCodeOk)
-    throw new AppError('Class code is not valid', httpStatus.UNAUTHORIZED);
-
-  // TODO: Also Validate if user have permission to make announcement ?
-  // TODO: Date issue fix(BD time zone implement) ?
-
-  const makeAnnouncement = await Announcement.create(announcement);
-  if (!makeAnnouncement || !makeAnnouncement._id)
-    throw new AppError('Announcement not created', httpStatus.BAD_REQUEST);
-
-  // return makeAnnouncement;
-  return {
-    description: makeAnnouncement.description,
-    date: makeAnnouncement.date,
-  };
-};
-
-// TODO: Create Announcement With Materials
-const CreateAnnouncementWithMaterials = async (data: {
+// <------------------------------- Create Announcement ------------------------------->
+const CreateAnnouncement = async (data: {
   classCode: string;
   description?: string | null;
   materials?:
@@ -45,6 +23,8 @@ const CreateAnnouncementWithMaterials = async (data: {
 
   if (!isCodeOk)
     throw new AppError('Class code is not valid', httpStatus.UNAUTHORIZED);
+
+  // TODO: Also Validate if user have permission to make announcement ?
 
   const announcement: IAnnouncement = {
     classCode: data.classCode,
@@ -78,5 +58,4 @@ const CreateAnnouncementWithMaterials = async (data: {
 
 export const AnnouncementService = {
   CreateAnnouncement,
-  CreateAnnouncementWithMaterials,
 };
