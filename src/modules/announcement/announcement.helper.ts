@@ -41,14 +41,15 @@ export const formatFileName = (
   classCode: string,
   originalName: string,
 ): string => {
+  const type = originalName.split('.')[1];
   // Remove spaces and replace with underscores
-  const formattedName = originalName.replace(
-    /[\s!@#$%^&*()_+={}[\]:;<>,.?~\\/-]/g,
-    '_',
-  );
+  const formattedName = originalName
+    .split('.')[0]
+    .replace(/[\s!@#$%^&*()_+={}[\]:;<>,.?~\\/-]/g, '_')
+    .replace(/_+$/, '');
 
   // Concatenate classCode and formattedName, convert to lowercase
-  const result = `${classCode}_${formattedName}`.toLowerCase();
+  const result = `${classCode}_${formattedName}.${type}`.toLowerCase();
 
   return result;
 };
