@@ -60,12 +60,7 @@ const GetUserBasedLogHistory = async (email: string) => {
           $first: '$cpu',
         },
         date: {
-          $first: {
-            $dateToString: {
-              format: '%Y-%m-%d | %H:%M:%S',
-              date: '$createdAt',
-            },
-          },
+          $first: '$createdAt',
         },
       },
     },
