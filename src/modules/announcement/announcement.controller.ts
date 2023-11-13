@@ -8,6 +8,10 @@ import { formatFileName } from './announcement.helper';
 import { IAnnouncement } from './announcement.interface';
 import { AnnouncementService } from './announcement.service';
 
+//TODO: File size reduce (sharp)
+//TODO: Track who announced
+//TODO: Video Size Reduce
+//TODO: Audio Size Reduce
 // Create Announcement
 const CreateAnnouncement: RequestHandler = catchAsync(async (req, res) => {
   const { classCode, description, email } = req.body as IAnnouncement;
@@ -52,6 +56,34 @@ const CreateAnnouncement: RequestHandler = catchAsync(async (req, res) => {
   );
 });
 
+// Get Classroom wise Announcements
+const GetAnnouncements: RequestHandler = catchAsync(async (req, res) => {
+  const { classCode, email } = req.params;
+
+  if (!classCode || !email)
+    throw new AppError(
+      'Class Code & Email is required',
+      httpStatus.BAD_REQUEST,
+    );
+
+  await isClassCodeOk(classCode);
+
+  const response = await AnnouncementService.GetAnnouncements({
+    classCode,
+    email,
+  });
+
+  return throwResponse(
+    req,
+    res,
+    response,
+    httpStatus.OK,
+    'Successfully get announcements',
+    true,
+  );
+});
+
 export const AnnouncementController = {
   CreateAnnouncement,
+  GetAnnouncements,
 };

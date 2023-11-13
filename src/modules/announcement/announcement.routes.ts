@@ -12,4 +12,9 @@ router.post(
   AnnouncementController.CreateAnnouncement,
 );
 
+router.get(
+  '/classroom/:classCode/:email',
+  AnnouncementController.GetAnnouncements,
+);
+
 export { router as AnnouncementRoutes };

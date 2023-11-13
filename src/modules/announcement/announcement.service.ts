@@ -77,6 +77,51 @@ const CreateAnnouncement = async (data: {
   };
 };
 
+// Get Classroom wise Announcements
+const GetAnnouncements = async (data: { classCode: string; email: string }) => {
+  const isRightStudent = await People.findOne({
+    classCode: data.classCode,
+    requestEmail: data.email,
+    status: 'joined',
+  });
+
+  const isRightMentor = await Classroom.findOne({
+    classCode: data.classCode,
+    mentorEmail: data.email,
+  });
+
+  if (!isRightStudent && !isRightMentor)
+    throw new AppError(
+      'You are not allowed to see announcements',
+      httpStatus.UNAUTHORIZED,
+    );
+
+  const announcements = await Announcement.aggregate([
+    {
+      $match: {
+        classCode: data.classCode,
+      },
+    },
+    {
+      $project: {
+        _id: 0,
+        description: 1,
+        materials: 1,
+        date: 1,
+        id: '$_id',
+      },
+    },
+    {
+      $sort: {
+        date: -1,
+      },
+    },
+  ]);
+
+  return announcements;
+};
+
 export const AnnouncementService = {
   CreateAnnouncement,
+  GetAnnouncements,
 };
