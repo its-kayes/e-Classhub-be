@@ -49,6 +49,7 @@ const CreateAnnouncement = async (data: {
     classCode: data.classCode,
     description: data.description || null,
     materials: null,
+    email: data.email,
   };
 
   // <------------------ Upload Audio files to AWS S3 ------------------>
@@ -103,11 +104,23 @@ const GetAnnouncements = async (data: { classCode: string; email: string }) => {
       },
     },
     {
+      $lookup: {
+        from: 'users',
+        localField: 'email',
+        foreignField: 'email',
+        as: 'email',
+      },
+    },
+    {
+      $unwind: '$email',
+    },
+    {
       $project: {
-        _id: 0,
         description: 1,
         materials: 1,
         date: 1,
+        name: '$email.name',
+        _id: 0,
         id: '$_id',
       },
     },

@@ -20,6 +20,10 @@ const announcementSchema = new Schema<IAnnouncement>(
         url: String,
       },
     ],
+    email: {
+      type: String,
+      required: [true, 'Email is must required'],
+    },
   },
   { timestamps: true },
 );
