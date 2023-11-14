@@ -83,7 +83,45 @@ const GetAnnouncements: RequestHandler = catchAsync(async (req, res) => {
   );
 });
 
+// Delete Announcement
+const DeleteAnnouncement: RequestHandler = catchAsync(async (req, res) => {
+  const { id, email, classCode } = req.body as {
+    id: string;
+    email: string;
+    classCode: string;
+  };
+
+  if (!id || !email || !classCode)
+    throw new AppError(
+      'Id, ClassCode & Email is required',
+      httpStatus.BAD_REQUEST,
+    );
+
+  await isClassCodeOk(classCode);
+
+  const result = await AnnouncementService.DeleteAnnouncement(
+    id,
+    email,
+    classCode,
+  );
+  if (!result)
+    throw new AppError(
+      'Something went wrong',
+      httpStatus.INTERNAL_SERVER_ERROR,
+    );
+
+  return throwResponse(
+    req,
+    res,
+    result,
+    httpStatus.OK,
+    'Successfully deleted',
+    true,
+  );
+});
+
 export const AnnouncementController = {
   CreateAnnouncement,
   GetAnnouncements,
+  DeleteAnnouncement,
 };

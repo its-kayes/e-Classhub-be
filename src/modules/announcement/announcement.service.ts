@@ -134,7 +134,40 @@ const GetAnnouncements = async (data: { classCode: string; email: string }) => {
   return announcements;
 };
 
+// Delete Announcement
+const DeleteAnnouncement = async (
+  id: string,
+  email: string,
+  classCode: string,
+) => {
+  const isRightMentor = await Classroom.findOne({
+    mentorEmail: email,
+    classCode,
+    status: 'active',
+  });
+
+  const isRightUser = await Announcement.findOne({ _id: id, email });
+
+  if (!isRightMentor && !isRightUser)
+    throw new AppError(
+      'You are not allowed to delete this announcement',
+      httpStatus.UNAUTHORIZED,
+    );
+
+  const deleted = await Announcement.findByIdAndDelete(
+    {
+      _id: id,
+    },
+    { new: true },
+  );
+
+  if (!deleted)
+    throw new AppError('Announcement not deleted', httpStatus.BAD_REQUEST);
+
+  return deleted;
+};
 export const AnnouncementService = {
   CreateAnnouncement,
   GetAnnouncements,
+  DeleteAnnouncement,
 };

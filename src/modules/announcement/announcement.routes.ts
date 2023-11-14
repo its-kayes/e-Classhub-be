@@ -17,4 +17,6 @@ router.get(
   AnnouncementController.GetAnnouncements,
 );
 
+router.delete('/delete', AnnouncementController.DeleteAnnouncement);
+
 export { router as AnnouncementRoutes };
