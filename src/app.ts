@@ -9,7 +9,6 @@ import helmet from 'helmet';
 import httpStatus from 'http-status';
 import logger from 'morgan';
 import path from 'path';
-import { ACCESSED_ORIGIN_LIST, ALLOW_ALL_ORIGIN } from './config/siteEnv';
 import globalErrorHandler from './errors/globalErrorHandler';
 import { throwResponse } from './shared/throwResponse';
 import { v1 } from './versions/v1';
@@ -18,45 +17,12 @@ const app: Application = express();
 
 app.set('serverTimeout', 300000);
 
-let corsOptions: CorsOptions;
-
-switch (ALLOW_ALL_ORIGIN) {
-  case 'true':
-    corsOptions = {
-      origin: '*',
-      methods: '*',
-      allowedHeaders: ['Content-Type', 'Authorization'],
-      credentials: true,
-    };
-
-    break;
-  case 'false':
-    corsOptions = {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      origin: (origin: any, callback: any) => {
-        // Check if the request comes from your Google Play Store app
-        if (isRequestFromValidateOrigin(origin)) {
-          callback(null, true);
-        } else {
-          callback(new Error('Not allowed by CORS'));
-        }
-      },
-      methods: '*',
-      allowedHeaders: ['Content-Type', 'Authorization'],
-      credentials: true,
-    };
-
-    break;
-  default:
-    corsOptions = {
-      origin: '*',
-      methods: '*',
-      allowedHeaders: ['Content-Type', 'Authorization'],
-      credentials: true,
-    };
-
-    break;
-}
+const corsOptions: CorsOptions = {
+  origin: '*',
+  methods: '*',
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true,
+};
 
 const options: RequestHandler[] = [
   cors(corsOptions),
@@ -94,13 +60,5 @@ app.all('*', (req: Request, res: Response) => {
     false,
   );
 });
-
-function isRequestFromValidateOrigin(origin: string | undefined): boolean {
-  // console.log(origin);
-  // log(origin || 'local', 'red');
-
-  const allowedOrigins: string[] = ACCESSED_ORIGIN_LIST;
-  return !!origin && allowedOrigins.includes(origin);
-}
 
 export default app;
