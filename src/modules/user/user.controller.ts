@@ -4,6 +4,7 @@ import AppError from '../../errors/AppError';
 import { throwResponse } from '../../shared/throwResponse';
 import catchAsync from '../../util/catchAsync';
 import { isRequestOk } from '../../util/isRequestOk';
+import { logTracker } from '../tracker/tracker.service';
 import { IUser } from './user.interface';
 import { UserService } from './user.service';
 
@@ -67,6 +68,8 @@ const UserSignIn: RequestHandler = catchAsync(async (req, res) => {
       'Something went wrong',
       httpStatus.INTERNAL_SERVER_ERROR,
     );
+
+  await logTracker(email, req);
 
   return throwResponse(
     req,

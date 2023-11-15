@@ -556,6 +556,11 @@
   resolved "https://registry.yarnpkg.com/@types/strip-json-comments/-/strip-json-comments-0.0.30.tgz#9aa30c04db212a9a0649d6ae6fd50accc40748a1"
   integrity sha512-7NQmHra/JILCd1QqpSzl8+mJRc8ZHz3uDm8YV1Ks9IhK0epEiTw8aIErbvH9PI+6XbqhyIQy3462nEsn7UVzjQ==
 
+"@types/ua-parser-js@^0.7.38":
+  version "0.7.38"
+  resolved "https://registry.yarnpkg.com/@types/ua-parser-js/-/ua-parser-js-0.7.38.tgz#fd5eae721a4c4dd386d9ebab745a9306c8e71210"
+  integrity sha512-59CA5oavBEWSNLtS/BChj9xntiWMsIf9IytjxmBo9OuZEYuRzRf3K1ARzFPlXTOz5Zm2wXI38AP9RlLqDYMToQ==
+
 "@types/webidl-conversions@*":
   version "7.0.1"
   resolved "https://registry.yarnpkg.com/@types/webidl-conversions/-/webidl-conversions-7.0.1.tgz#2b9a2062b39a7272343c185cdb884f2e52188f75"
@@ -3369,6 +3374,11 @@ typescript@^5.2.2:
   version "5.2.2"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.2.2.tgz#5ebb5e5a5b75f085f22bc3f8460fba308310fa78"
   integrity sha512-mI4WrpHsbCIcwT9cF4FZvr80QUeKvsUsUvKDoR+X/7XHQH98xYD8YHZg7ANtz2GtZt/CBq2QJ0thkGJMHfqc1w==
+
+ua-parser-js@^1.0.37:
+  version "1.0.37"
+  resolved "https://registry.yarnpkg.com/ua-parser-js/-/ua-parser-js-1.0.37.tgz#b5dc7b163a5c1f0c510b08446aed4da92c46373f"
+  integrity sha512-bhTyI94tZofjo+Dn8SN6Zv8nBDvyXTymAdM3LDI/0IboIUwTu1rEhW7v2TfiVsoYWgkQ4kOVqnI8APUFbIQIFQ==
 
 undici-types@~5.25.1:
   version "5.25.3"
