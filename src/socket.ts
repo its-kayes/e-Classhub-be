@@ -14,8 +14,11 @@ const configureSocketIO = (server: HttpServer) => {
     console.log(`⚡: ${socket.id} user just connected!`);
 
     socket.on('message', data => {
-      console.log(data);
       socketIO.emit('messageResponse', data);
+    });
+
+    socket.on('private-chat', data => {
+      socketIO.emit(`private-chat-${data.room}`, data);
     });
 
     socket.on('typing', data => socket.broadcast.emit('typingResponse', data));
