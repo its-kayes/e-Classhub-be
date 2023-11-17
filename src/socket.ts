@@ -26,7 +26,10 @@ const configureSocketIO = (server: HttpServer) => {
       socketIO.emit(`group-chat-${data.room}`, data);
     });
 
-    socket.on('typing', data => socket.broadcast.emit('typingResponse', data));
+    // Typing Event
+    socket.on('typing', data => {
+      socketIO.emit(`who-typing-${data.room}`, data);
+    });
 
     socket.on('newUser', data => {
       console.log('🚀: newUser -> data', data);
