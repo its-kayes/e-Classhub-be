@@ -21,6 +21,11 @@ const configureSocketIO = (server: HttpServer) => {
       socketIO.emit(`private-chat-${data.room}`, data);
     });
 
+    // Group Chat
+    socket.on('group-chat', data => {
+      socketIO.emit(`group-chat-${data.room}`, data);
+    });
+
     socket.on('typing', data => socket.broadcast.emit('typingResponse', data));
 
     socket.on('newUser', data => {
