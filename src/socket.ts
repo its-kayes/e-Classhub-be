@@ -4,7 +4,7 @@ import { Server, Socket } from 'socket.io';
 const configureSocketIO = (server: HttpServer) => {
   const socketIO = new Server(server, {
     cors: {
-      origin: 'http://localhost:5173',
+      origin: ['http://localhost:5173', 'https://eclasshub.kayes.dev'],
     },
   });
 

@@ -8,3 +8,4 @@ exports.UserRoutes = router;
 router.get('/find-one', user_controller_1.UserController.FindUser); // Find One User
 router.post('/sign-up', user_controller_1.UserController.UserSignUp); // Sign In User //TODO: Validator Middleware
 router.post('/sign-in', user_controller_1.UserController.UserSignIn); // Sign Up User
+router.patch('/update-name-title/:email', user_controller_1.UserController.UpdateNameTitle); // Update Name and Title

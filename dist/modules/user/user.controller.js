@@ -18,6 +18,7 @@ const AppError_1 = __importDefault(require("../../errors/AppError"));
 const throwResponse_1 = require("../../shared/throwResponse");
 const catchAsync_1 = __importDefault(require("../../util/catchAsync"));
 const isRequestOk_1 = require("../../util/isRequestOk");
+const tracker_service_1 = require("../tracker/tracker.service");
 const user_service_1 = require("./user.service");
 // Find User Info
 const FindUser = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -51,10 +52,22 @@ const UserSignIn = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, voi
     const result = yield user_service_1.UserService.UserSignIn({ email, password });
     if (!result)
         throw new AppError_1.default('Something went wrong', http_status_1.default.INTERNAL_SERVER_ERROR);
+    yield (0, tracker_service_1.logTracker)(email, req);
     return (0, throwResponse_1.throwResponse)(req, res, result, http_status_1.default.OK, 'Sign in Successful', true);
+}));
+//Update Name Title
+const UpdateNameTitle = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { name, title } = req.body;
+    const { email } = req.params;
+    (0, isRequestOk_1.isRequestOk)([name, title, email]);
+    const result = yield user_service_1.UserService.UpdateNameTitle(name, title, email);
+    if (!result)
+        throw new AppError_1.default('Something went wrong', http_status_1.default.INTERNAL_SERVER_ERROR);
+    return (0, throwResponse_1.throwResponse)(req, res, result, http_status_1.default.OK, 'Name and Title Updated', true);
 }));
 exports.UserController = {
     FindUser,
     UserSignUp,
     UserSignIn,
+    UpdateNameTitle,
 };

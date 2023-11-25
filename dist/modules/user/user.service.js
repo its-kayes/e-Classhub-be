@@ -58,8 +58,16 @@ const UserSignIn = (data) => __awaiter(void 0, void 0, void 0, function* () {
     };
     return finalData;
 });
+//Update Name Title
+const UpdateNameTitle = (name, title, email) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield user_model_1.User.findOneAndUpdate({ email }, { title, name }, { new: true }).select(['name', 'title']);
+    if (!result || result === null)
+        throw new AppError_1.default('No user found', http_status_1.default.NOT_FOUND);
+    return result;
+});
 exports.UserService = {
     UserSignUp,
     FindUser,
     UserSignIn,
+    UpdateNameTitle,
 };
