@@ -13,35 +13,28 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importDefault(require("mongoose"));
-const app_1 = __importDefault(require("./app"));
+const app_1 = require("./app"); // Import the server from app.ts
 const siteEnv_1 = require("./config/siteEnv");
 process.on('uncaughtException', error => {
     console.log(error);
     process.exit(1);
 });
-let server;
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            mongoose_1.default
-                .connect(siteEnv_1.MONGO_URI, {
+            yield mongoose_1.default.connect(siteEnv_1.MONGO_URI, {
                 useNewUrlParser: true,
                 useUnifiedTopology: true,
-            })
-                .then(() => {
-                console.log('DB Connected!');
-                app_1.default.listen(siteEnv_1.PORT, () => console.log(`Server Ok ? ${siteEnv_1.PORT}`));
-            })
-                .catch(error => {
-                console.log(error);
             });
+            console.log('DB Connected!');
+            app_1.server.listen(siteEnv_1.PORT, () => console.log(`Server Ok ? ${siteEnv_1.PORT}`));
         }
         catch (error) {
             console.log('Failed to connect database', error);
         }
         process.on('unhandledRejection', error => {
-            if (server) {
-                server.close(() => {
+            if (app_1.server) {
+                app_1.server.close(() => {
                     console.log(error);
                     process.exit(1);
                 });

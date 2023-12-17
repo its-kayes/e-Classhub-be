@@ -45,7 +45,20 @@ const FindClassroom = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, 
         throw new AppError_1.default('Something went wrong', http_status_1.default.INTERNAL_SERVER_ERROR);
     return (0, throwResponse_1.throwResponse)(req, res, result, http_status_1.default.OK, 'Successfully fetched classroom!', true);
 }));
+// List all Classrooms (User Based) !
+const ClassroomList = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { email, type } = req.params;
+    if (!email)
+        throw new AppError_1.default('Email is required', http_status_1.default.BAD_REQUEST);
+    if (!type || (type !== 'mentor' && type !== 'student'))
+        throw new AppError_1.default('Type is required, either it can be only mentor or student', http_status_1.default.BAD_REQUEST);
+    const result = yield classroom_service_1.ClassroomService.ClassroomList(email, type);
+    if (!result)
+        throw new AppError_1.default('Something went wrong', http_status_1.default.INTERNAL_SERVER_ERROR);
+    return (0, throwResponse_1.throwResponse)(req, res, result, http_status_1.default.OK, 'Successfully fetched classrooms!', true);
+}));
 exports.ClassroomController = {
     CreateClassroom,
     FindClassroom,
+    ClassroomList,
 };
