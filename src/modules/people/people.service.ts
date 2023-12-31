@@ -166,7 +166,23 @@ const GetRequestedPeople = async (
 
 // Change People Status!
 const ChangeStatus = async (id: string, status: string) => {
-  return { id, status };
+  const isUpdate = await People.findByIdAndUpdate(
+    id,
+    {
+      $set: {
+        status,
+      },
+    },
+    { runValidators: true, new: true },
+  );
+
+  if (!isUpdate)
+    throw new AppError(
+      'No request found to be updated',
+      httpStatus.BAD_REQUEST,
+    );
+
+  return isUpdate;
 };
 
 export const PeopleService = {
