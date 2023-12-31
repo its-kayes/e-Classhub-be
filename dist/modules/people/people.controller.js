@@ -13,13 +13,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PeopleController = void 0;
-const catchAsync_1 = __importDefault(require("../../util/catchAsync"));
-const isRequestOk_1 = require("../../util/isRequestOk");
-const isClassCodeOk_1 = require("../../util/isClassCodeOk");
-const people_service_1 = require("./people.service");
-const AppError_1 = __importDefault(require("../../errors/AppError"));
 const http_status_1 = __importDefault(require("http-status"));
+const AppError_1 = __importDefault(require("../../errors/AppError"));
 const throwResponse_1 = require("../../shared/throwResponse");
+const catchAsync_1 = __importDefault(require("../../util/catchAsync"));
+const isClassCodeOk_1 = require("../../util/isClassCodeOk");
+const isRequestOk_1 = require("../../util/isRequestOk");
+const people_service_1 = require("./people.service");
 // Join Classroom
 const JoinClassroom = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { classCode, requestEmail } = req.body;
@@ -40,7 +40,17 @@ const GetRequestedPeople = (0, catchAsync_1.default)((req, res) => __awaiter(voi
         throw new AppError_1.default('Something went wrong', http_status_1.default.INTERNAL_SERVER_ERROR);
     return (0, throwResponse_1.throwResponse)(req, res, result, http_status_1.default.OK, 'Requested People fetched successfully!', true);
 }));
+const ChangeStatus = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id, status } = req.body;
+    if (!id || !status)
+        throw new AppError_1.default('Id and Status must needed', http_status_1.default.BAD_REQUEST);
+    const result = yield people_service_1.PeopleService.ChangeStatus(id, status);
+    if (!result)
+        throw new AppError_1.default('Something went wrong', http_status_1.default.INTERNAL_SERVER_ERROR);
+    (0, throwResponse_1.throwResponse)(req, res, result, http_status_1.default.OK, 'Status Updated', true);
+}));
 exports.PeopleController = {
     JoinClassroom,
     GetRequestedPeople,
+    ChangeStatus,
 };

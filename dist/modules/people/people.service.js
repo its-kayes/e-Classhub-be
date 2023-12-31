@@ -15,9 +15,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.PeopleService = void 0;
 const http_status_1 = __importDefault(require("http-status"));
 const AppError_1 = __importDefault(require("../../errors/AppError"));
-const people_model_1 = require("./people.model");
-const user_model_1 = require("../user/user.model");
 const classroom_model_1 = require("../classroom/classroom.model");
+const user_model_1 = require("../user/user.model");
+const people_model_1 = require("./people.model");
 // Join Classroom
 const JoinClassroom = (data) => __awaiter(void 0, void 0, void 0, function* () {
     const { classCode, requestEmail } = data;
@@ -125,7 +125,19 @@ const GetRequestedPeople = (status, email, classCode) => __awaiter(void 0, void 
     ]);
     return details;
 });
+// Change People Status!
+const ChangeStatus = (id, status) => __awaiter(void 0, void 0, void 0, function* () {
+    const isUpdate = yield people_model_1.People.findByIdAndUpdate(id, {
+        $set: {
+            status,
+        },
+    }, { runValidators: true, new: true });
+    if (!isUpdate)
+        throw new AppError_1.default('No request found to be updated', http_status_1.default.BAD_REQUEST);
+    return isUpdate;
+});
 exports.PeopleService = {
     JoinClassroom,
     GetRequestedPeople,
+    ChangeStatus,
 };
