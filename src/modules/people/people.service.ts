@@ -1,9 +1,9 @@
 import httpStatus from 'http-status';
 import AppError from '../../errors/AppError';
+import { Classroom } from '../classroom/classroom.model';
+import { User } from '../user/user.model';
 import { IPeople } from './people.interface';
 import { People } from './people.model';
-import { User } from '../user/user.model';
-import { Classroom } from '../classroom/classroom.model';
 
 // Join Classroom
 const JoinClassroom = async (data: IPeople) => {
@@ -164,7 +164,13 @@ const GetRequestedPeople = async (
   return details;
 };
 
+// Change People Status!
+const ChangeStatus = async (id: string, status: string) => {
+  return { id, status };
+};
+
 export const PeopleService = {
   JoinClassroom,
   GetRequestedPeople,
+  ChangeStatus,
 };

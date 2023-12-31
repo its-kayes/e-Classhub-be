@@ -10,4 +10,6 @@ router.get(
   PeopleController.GetRequestedPeople,
 ); // Get Classroom & status based People list for a Classroom
 
+router.patch('/change-status', PeopleController.ChangeStatus);
+
 export { router as PeopleRoutes };
